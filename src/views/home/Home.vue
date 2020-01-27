@@ -3,53 +3,13 @@
         <nav-bar class="home-nav">
             <div slot="center">购物街</div>
         </nav-bar>
-        <home-swiper :banners="banners" />
-        <home-recommend-view :recommends="recommends" />
-        <feature-view />
-        <tab-control class="tab-control" :titles="titles" />
-        <goods-list :goods="goods['pop'].list" />
-        <ul>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-            <li>aaaaa</li>
-        </ul>
+        <scroll class="content">
+            <home-swiper :banners="banners" />
+            <home-recommend-view :recommends="recommends" />
+            <feature-view />
+            <tab-control class="tab-control" :titles="titles" @tabClick="tabClick" />
+            <goods-list :goods="showGoods" />
+        </scroll>
     </div>
 </template>
 
@@ -61,6 +21,7 @@
     import NavBar from 'components/common/navbar/NavBar'
     import TabControl from 'components/content/tabControl/TabControl'
     import GoodsList from 'components/content/goods/GoodsList'
+    import Scroll from 'components/common/scroll/Scroll'
 
     import { getHomeMutidata, getHomeGoods } from 'network/home'
 
@@ -73,7 +34,8 @@
 
             NavBar,
             TabControl,
-            GoodsList
+            GoodsList,
+            Scroll
         },
         data() {
             return {
@@ -97,7 +59,13 @@
                         page: 0,
                         list: []
                     }
-                }
+                },
+                currentType: 'pop' // 默认展示类型
+            }
+        },
+        computed: {
+            showGoods() {
+                return this.goods[this.currentType].list;
             }
         },
         created() {
@@ -110,7 +78,31 @@
             this.getHomeGoodsFn('new');
             this.getHomeGoodsFn('sell');
         },
+        mounted() {
+            
+        },
         methods: {
+            /**
+                事件监听相关的方法
+             */
+            tabClick(index) {
+                console.log(index);
+                switch (index) {
+                    case 0:
+                        this.currentType = 'pop';
+                        break;
+                    case 1:
+                        this.currentType = 'new';
+                        break;
+                    case 2:
+                        this.currentType = 'sell';
+                        break;
+                }
+            },
+
+            /**
+                网络请求相关的方法
+             */
             // 1、请求多个数据
             getHomeMutidataFn() {
                 getHomeMutidata().then(res => {
@@ -139,6 +131,8 @@
 <style scoped>
     #home {
         padding-top: 44px;
+        height: 100vh; /* vh -> 视口的高度 */
+        position: relative;
     }
 
     .home-nav {
@@ -159,6 +153,21 @@
 
         z-index: 9;
     }
+
+    .content {
+        /* height: 300px; */
+        overflow: hidden;
+        position: absolute;
+        top: 44px;
+        bottom: 49px;
+        left: 0;
+        right: 0;
+    }
+
+    /* .content {
+        height: calc(100% - 49px);
+        overflow: hidden;
+    } */
 </style>
 
 /* let totalNums = [];

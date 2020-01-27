@@ -28,4 +28,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # 轮播图
 
+# Better-Scroll
 
+# ref
+    ref如果绑定在组件中的，那么通过“this.$ref.refname”获取到的是一个组件对象、
+    ref如果绑定在普通的元素中，那么通过“this.$ref.refname”获取到的是一个元素对象
+
+# 无法确定高度的时候两种解决方式
+    1、根据calc属性进行计算
+    2、使用绝对定位
