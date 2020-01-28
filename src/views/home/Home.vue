@@ -3,13 +3,23 @@
         <nav-bar class="home-nav">
             <div slot="center">购物街</div>
         </nav-bar>
-        <scroll class="content">
+        <scroll class="content"
+             ref="scroll"
+             :probe-type="3"
+             :click="true" 
+             :pull-up-load="true" 
+             @scroll="contentScroll"
+             @pullingUp="loadMore">
             <home-swiper :banners="banners" />
             <home-recommend-view :recommends="recommends" />
             <feature-view />
             <tab-control class="tab-control" :titles="titles" @tabClick="tabClick" />
             <goods-list :goods="showGoods" />
         </scroll>
+        <!-- 直接监听组件的点击
+            .native修饰符：当我们需要监听一个组件原生事件时，必须给对应的事件加上.native修饰符，才能进行监听。
+         -->
+        <back-top @click.native="backClick" v-show="isShowBackTop" />
     </div>
 </template>
 
@@ -22,6 +32,7 @@
     import TabControl from 'components/content/tabControl/TabControl'
     import GoodsList from 'components/content/goods/GoodsList'
     import Scroll from 'components/common/scroll/Scroll'
+    import BackTop from 'components/content/backTop/BackTop'
 
     import { getHomeMutidata, getHomeGoods } from 'network/home'
 
@@ -35,7 +46,8 @@
             NavBar,
             TabControl,
             GoodsList,
-            Scroll
+            Scroll,
+            BackTop
         },
         data() {
             return {
@@ -60,7 +72,8 @@
                         list: []
                     }
                 },
-                currentType: 'pop' // 默认展示类型
+                currentType: 'pop', // 默认展示类型
+                isShowBackTop: false // 是否展示
             }
         },
         computed: {
@@ -86,7 +99,6 @@
                 事件监听相关的方法
              */
             tabClick(index) {
-                console.log(index);
                 switch (index) {
                     case 0:
                         this.currentType = 'pop';
@@ -99,7 +111,22 @@
                         break;
                 }
             },
+            backClick() {
+                // 获取组件对象，回到顶部
+                // this.$refs.scroll.scroll.scrollTo(0, 0, 500);
+                this.$refs.scroll.scrollTo(0, 0);
+            },
+            contentScroll(position) {
+                if (position.y < -1000) {
+                    this.isShowBackTop = true;
+                } else {
+                    this.isShowBackTop = false;
+                }
 
+            },
+            loadMore() {
+                this.getHomeGoodsFn(this.currentType);
+            },
             /**
                 网络请求相关的方法
              */
@@ -121,6 +148,9 @@
                 getHomeGoods(type, page).then(res => {
                     this.goods[type].list.push(...res.data.list);
                     this.goods[type].page += 1;
+
+                    this.$refs.scroll.finishPullUp();
+                    this.$refs.scroll.refresh();
                 }).catch(err => {
                     console.log(err);
                 })
