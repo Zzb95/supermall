@@ -9,7 +9,7 @@
              :click="true" 
              :pull-up-load="true" 
              @scroll="contentScroll"
-             @pullingUp="loadMore">
+             >
             <home-swiper :banners="banners" />
             <home-recommend-view :recommends="recommends" />
             <feature-view />
@@ -35,6 +35,7 @@
     import BackTop from 'components/content/backTop/BackTop'
 
     import { getHomeMutidata, getHomeGoods } from 'network/home'
+    import { debounce } from 'common/utils'
 
     export default {
         name: 'Home',
@@ -90,9 +91,27 @@
             this.getHomeGoodsFn('pop');
             this.getHomeGoodsFn('new');
             this.getHomeGoodsFn('sell');
+
+            /* // 3、监听item中图片加载完成
+            this.$bus.$on('itemImageLoad', () => {
+                console.log('aaaa');
+                // 这样的话，执行频率会很高
+                this.$refs.scroll.refresh();
+                // 注意在created中可能拿不到$refs的
+            }); */
         },
         mounted() {
-            
+            const refresh = debounce(this.$refs.scroll.refresh, 500)
+
+            // 3、监听item中图片加载完成
+            this.$bus.$on('itemImageLoad', () => {
+                /* // 这样的话，执行频率会很高
+                this.$refs.scroll.refresh();
+                // 注意在created中可能拿不到$refs的
+                // 对于refresh非常频繁的问题，进行防抖操作 防抖debounce/节流throttle
+                // 需要封装一个函数 */
+                refresh();
+            });
         },
         methods: {
             /**
@@ -150,7 +169,7 @@
                     this.goods[type].page += 1;
 
                     this.$refs.scroll.finishPullUp();
-                    this.$refs.scroll.refresh();
+                    // this.$refs.scroll.refresh();
                 }).catch(err => {
                     console.log(err);
                 })

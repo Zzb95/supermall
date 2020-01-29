@@ -53,20 +53,22 @@
 
             // 3.监听上拉事件
             this.scroll.on('pullingUp', () => {
-                this.$emit('pullingUp');
+                // this.$emit('pullingUp');
             });
-
             this.scrollTo(0, 0);
         },
         methods: {
             scrollTo(x, y, time=300) {
-                this.scroll.scrollTo(x, y, time);
+                // 判断scroll是否创建成功
+                this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time);
             },
             finishPullUp() {
-                this.scroll.finishPullUp();
+                // 判断scroll是否创建成功
+                this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp();
             },
             refresh() {
-                this.scroll.refresh();
+                // 判断scroll是否创建成功
+                this.scroll && this.scroll.refresh && this.scroll.refresh();
             }
         }
     }
