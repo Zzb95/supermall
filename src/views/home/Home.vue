@@ -3,17 +3,28 @@
         <nav-bar class="home-nav">
             <div slot="center">购物街</div>
         </nav-bar>
+        <tab-control 
+                class="tab-control-top" 
+                :titles="titles" 
+                @tabClick="tabClick" 
+                ref="tabControl1" 
+                v-show="isTabFixed"/>
         <scroll class="content"
              ref="scroll"
              :probe-type="3"
              :click="true" 
              :pull-up-load="true" 
+             @pullingUp="loadMore" 
              @scroll="contentScroll"
              >
-            <home-swiper :banners="banners" />
+            <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
             <home-recommend-view :recommends="recommends" />
             <feature-view />
-            <tab-control class="tab-control" :titles="titles" @tabClick="tabClick" />
+            <tab-control 
+                class="tab-control" 
+                :titles="titles" 
+                @tabClick="tabClick" 
+                ref="tabControl2" />
             <goods-list :goods="showGoods" />
         </scroll>
         <!-- 直接监听组件的点击
@@ -74,7 +85,10 @@
                     }
                 },
                 currentType: 'pop', // 默认展示类型
-                isShowBackTop: false // 是否展示
+                isShowBackTop: false, // 是否展示
+                tabOffsetTop: 0,
+                isTabFixed: false,
+                saveY: 0
             }
         },
         computed: {
@@ -101,6 +115,7 @@
             }); */
         },
         mounted() {
+            // 1、图片加载完成的事件监听
             const refresh = debounce(this.$refs.scroll.refresh, 500)
 
             // 3、监听item中图片加载完成
@@ -129,6 +144,9 @@
                         this.currentType = 'sell';
                         break;
                 }
+
+                this.$refs.tabControl1.currentIndex = index;
+                this.$refs.tabControl2.currentIndex = index;
             },
             backClick() {
                 // 获取组件对象，回到顶部
@@ -136,15 +154,24 @@
                 this.$refs.scroll.scrollTo(0, 0);
             },
             contentScroll(position) {
+                // 1、判断BackTop是否显示
                 if (position.y < -1000) {
                     this.isShowBackTop = true;
                 } else {
                     this.isShowBackTop = false;
                 }
 
+                // 决定tabControl是否吸顶（position: fixed）
+                this.isTabFixed = (-position.y) > this.tabOffsetTop ? true : false;
+
             },
             loadMore() {
                 this.getHomeGoodsFn(this.currentType);
+            },
+            swiperImageLoad() {
+                // 2、获取tabControl的offsetTop
+                // 所有的组件都有一个属性$el，用于获取组件中的元素
+                this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
             },
             /**
                 网络请求相关的方法
@@ -168,18 +195,30 @@
                     this.goods[type].list.push(...res.data.list);
                     this.goods[type].page += 1;
 
+                    // 完成上拉下载更多
                     this.$refs.scroll.finishPullUp();
-                    // this.$refs.scroll.refresh();
                 }).catch(err => {
                     console.log(err);
                 })
             }
+        },
+        destroyed() {
+
+        },
+        activated() {
+            console.log('aaaaa')
+            this.$refs.scroll.scrollTo(0, this.saveY);
+            this.$refs.scroll.refresh();
+        },
+        deactivated() {
+            //this.saveY = this.$refs.scroll.scroll.y;
+            this.saveY = this.$refs.scroll.getScrollY();
         }
     }
 </script>
 <style scoped>
     #home {
-        padding-top: 44px;
+        /* padding-top: 44px; */
         height: 100vh; /* vh -> 视口的高度 */
         position: relative;
     }
@@ -188,19 +227,20 @@
         background-color: var(--color-tint);
         color: #fff;
 
-        position: fixed;
+        /* 在使用浏览器远胜过滚动时，为了让导航不跟随一起滚动 */
+        /* position: fixed;
         left: 0;
         right: 0;
         top: 0;
-        z-index: 9;
+        z-index: 9; */
     }
 
     /* 停留滚动 */
     .tab-control {
-        position: sticky;
+        /* position: sticky;
         top: 44px;
 
-        z-index: 9;
+        z-index: 9; */
     }
 
     .content {
@@ -217,6 +257,19 @@
         height: calc(100% - 49px);
         overflow: hidden;
     } */
+
+    /* 停留效果不管用 */
+    /* .fixed {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 44px;
+    } */
+
+    .tab-control-top {
+        position: relative;
+        z-index: 9;
+    }
 </style>
 
 /* let totalNums = [];

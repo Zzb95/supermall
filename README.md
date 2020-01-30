@@ -83,4 +83,34 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     （3）之后在调用非常频繁的时候，就使用新生成的函数
     （4）而新生成的函数，并不会非常频繁的调用，如果下一次执行来的非常快，那么会将上一次取消掉
 
+# 上拉加载更多的功能
+
+# tabControl的吸顶效果
+    一、获取到tabControl的offsetTop
+        1、必须知道滚动到多少时，开始有吸顶效果，这个时候就需要获取tabControll的offsetTop
+        2、但是，如果直接在mounted中获取tabControl的offsetTop，那么值是不正确的
+        3、如何获取正确的值了？
+        （1）监听HomeSwiper中img的加载完成
+        （2）加载完成后，发出事件，在Home.vue中，获取正确的值
+        （3）补充：
+            为了不让HomeSwiper多次发出事件
+            可以使用isLoad的变量进行状态的记录
+        （4）注意：
+            这里不进行多次调用和debouce的区别
+    二、监听滚动 动态的改变tabControl的样式
+        1、问题：动态的改变tabControl的样式时，会出现两个问题：
+            问题1：下面的商品内容，会突然间上移
+            问题2：tabControl虽然设置了fixed，但是也随着Better-Scroll一起滚出去了
+        2、其他方案来解决停留问题：
+            （1）在最上面，多复制了一份PlaceHolderTabControl组件对象，利用它来是嫌停留效果
+            （2）当用户滚动到一定位置时，PlaceHolderTabControl显示出来
+            （3）当用户滚动没有达到一定位置时，PlaceHolderTabControl隐藏起来
+
+# 让Home保持原来的状态
+    一、让Home不要随意的销毁掉
+        使用keep-alive
+    二、让Home中的内容保持原来的位置
+        1、离开时，保存一个位置信息
+        2、进来时，将位置设置为原来保存的位置saveY信息即可
+            注意：最好回来时，进行一次refresh()
 

@@ -47,14 +47,19 @@
             });
 
             // 2.监听滚动的位置
-            this.scroll.on('scroll', (postion) => {
-                this.$emit('scroll', postion);
-            });
+            if (this.probeType === 2 || this.probeType === 3) {
+                this.scroll.on('scroll', (postion) => {
+                    this.$emit('scroll', postion);
+                });
+            }
 
             // 3.监听上拉事件
-            this.scroll.on('pullingUp', () => {
-                // this.$emit('pullingUp');
-            });
+            // 监听scroll滚动到底部
+            if (this.pullUpLoad) {
+                this.scroll.on('pullingUp', () => {
+                    this.$emit('pullingUp');
+                });
+            }
             this.scrollTo(0, 0);
         },
         methods: {
@@ -69,6 +74,9 @@
             refresh() {
                 // 判断scroll是否创建成功
                 this.scroll && this.scroll.refresh && this.scroll.refresh();
+            },
+            getScrollY() {
+                return this.scroll ? this.scroll.y : 0;
             }
         }
     }
