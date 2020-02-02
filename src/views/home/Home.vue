@@ -46,7 +46,8 @@
     import BackTop from 'components/content/backTop/BackTop'
 
     import { getHomeMutidata, getHomeGoods } from 'network/home'
-    import { debounce } from 'common/utils'
+    /* import { debounce } from 'common/utils' */
+    import {itemListenerMixin} from 'common/mixin'
 
     export default {
         name: 'Home',
@@ -61,6 +62,7 @@
             Scroll,
             BackTop
         },
+        mixins: [itemListenerMixin],
         data() {
             return {
                 result: null,
@@ -88,7 +90,7 @@
                 isShowBackTop: false, // 是否展示
                 tabOffsetTop: 0,
                 isTabFixed: false,
-                saveY: 0
+                saveY: 0,
             }
         },
         computed: {
@@ -116,17 +118,19 @@
         },
         mounted() {
             // 1、图片加载完成的事件监听
-            const refresh = debounce(this.$refs.scroll.refresh, 500)
+            //const refresh = debounce(this.$refs.scroll.refresh, 500)
 
             // 3、监听item中图片加载完成
-            this.$bus.$on('itemImageLoad', () => {
+            // 对监听的事件进行保存
+            //this.itemImgListener = () => {
                 /* // 这样的话，执行频率会很高
                 this.$refs.scroll.refresh();
                 // 注意在created中可能拿不到$refs的
                 // 对于refresh非常频繁的问题，进行防抖操作 防抖debounce/节流throttle
                 // 需要封装一个函数 */
-                refresh();
-            });
+                //refresh();
+            //};
+            //this.$bus.$on('itemImageLoad', this.itemImgListener);
         },
         methods: {
             /**
@@ -206,13 +210,16 @@
 
         },
         activated() {
-            console.log('aaaaa')
             this.$refs.scroll.scrollTo(0, this.saveY);
             this.$refs.scroll.refresh();
         },
         deactivated() {
+            // 1、保存Y值
             //this.saveY = this.$refs.scroll.scroll.y;
             this.saveY = this.$refs.scroll.getScrollY();
+
+            // 2、取消全局事件的监听
+            this.$bus.$off('itemImageLoad', this.itemImgListener);
         }
     }
 </script>

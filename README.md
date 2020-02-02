@@ -56,7 +56,10 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
             a.Vue.prototype.$bus = new Vue();
             b.this.$bus.$emit('事件名称', '参数');
             c.this.$bus.$on('事件名称', '回调函数(参数)')
-        4、
+        4、文档地址：https://ustbhuangyi.github.io/better-scroll/doc/api.html
+
+        5、卸载better-scroll：npm uninstall better-scroll
+        6、指定版本npm install better-scroll@1.13.2 --save
 # ref
     ref如果绑定在组件中的，那么通过“this.$ref.refname”获取到的是一个组件对象、
     ref如果绑定在普通的元素中，那么通过“this.$ref.refname”获取到的是一个元素对象
@@ -114,3 +117,20 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         2、进来时，将位置设置为原来保存的位置saveY信息即可
             注意：最好回来时，进行一次refresh()
 
+# 如何将时间戳转成时间格式化字符串（常用）
+    时间戳：1535694719（秒）
+    1、将时间戳转成Date对象
+    const date = new Date(1535694719 * 1000)
+    2、将date进行格式化，转成对应的字符串
+        date.getYear() + date.getMonth() + 1
+        date -> FormatString(太常用)
+        fmt.format(date, 'yyyy-MM-dd hh:mm:ss')
+        y: year 年
+        M: Month 月
+        d: day 日
+        h: hours 小时 有一些语言区分h和H(h(12小时制)/H(24小时制))
+        m: minutes 分钟
+        s: seconds 秒钟
+
+# mixin 混入
+    
