@@ -6,7 +6,7 @@
             <detail-swipper :top-images="topImages" />
             <detail-base-info :goods="goods" />
             <detail-shop-info :shop="shop" />
-            <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
+            <detail-goods-info :detail-info="detailInfo" @itemImageLoad="imageLoad" />
             <detail-param-info :param-info="paramInfo" />
             <detail-comment-info :comment-info="commentInfo" />
             <goods-list :goods="recommends"/>
@@ -98,9 +98,10 @@
                     this.recommends = res.data.list;
                 });
             },
-            imageLoad() {
+            // 方法1：直接传过来接收；方法2：使用混入
+            /* imageLoad() {
                 this.$refs.scroll.refresh();
-            }
+            } */
         },
         mounted() {
         },

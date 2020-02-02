@@ -149,8 +149,10 @@
                         break;
                 }
 
-                this.$refs.tabControl1.currentIndex = index;
-                this.$refs.tabControl2.currentIndex = index;
+                if (this.$refs.tabControl1 !== undefined) {
+                    this.$refs.tabControl1.currentIndex = index;
+                    this.$refs.tabControl2.currentIndex = index;
+                }
             },
             backClick() {
                 // 获取组件对象，回到顶部
