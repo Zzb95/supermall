@@ -158,3 +158,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     hack做法：
         this.currentIndex !== i && (positionY > this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
     空间换时间
+
+# 底部工具栏的封装
+
+# 详情页的回到顶部
+    home.vue和detail.vue回到顶部: mixin
+
+# 使用vuex
+    数组常用的方法有哪些？
+    push/pop/unshift/shift/sort/reverse/map/filter/reduce/join

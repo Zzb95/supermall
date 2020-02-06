@@ -23,15 +23,22 @@
 
 <script>
     export default {
-        name: 'DetailBottomBar'
+        name: 'DetailBottomBar',
+        methods: {
+          addToCart() {
+            this.$emit('addCard');
+          }
+        }
     }
 </script>
 <style scoped>
   .bottom-bar {
-    height: 49px;
-    background: #fff;
-
-    position: relative;
+    height: 58px;
+    position: fixed;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     display: flex;
     text-align: center;

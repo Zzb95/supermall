@@ -16,7 +16,8 @@
             <detail-comment-info ref="comment" :comment-info="commentInfo" />
             <goods-list ref="recommend" :goods="recommends"/>
         </scroll>
-        <detail-bottom-bar />
+        <detail-bottom-bar @addCard="addToCard" />
+        <back-top @click.native="backClick" v-show="isShowBackTop" />
     </div>
 </template>
 
@@ -35,7 +36,7 @@
 
     import { getDetail, Goods, Shop, GoodsParam, getRecommend } from 'network/detail'
     import { debounce } from 'common/utils'
-    import {itemListenerMixin} from 'common/mixin'
+    import {itemListenerMixin, backTopMixin} from 'common/mixin'
 
     export default {
         name: 'Detail',
@@ -49,9 +50,9 @@
             DetailParamInfo,
             DetailCommentInfo,
             GoodsList,
-            DetailBottomBar
+            DetailBottomBar,
         },
-        mixins: [itemListenerMixin],
+        mixins: [itemListenerMixin, backTopMixin],
         data() {
             return {
                 iid: null, // 获取数据的id
@@ -64,7 +65,7 @@
                 recommends: [],
                 themeTopYs: [],
                 getThemeTopY: null,
-                currentIndex: 0
+                currentIndex: 0,
             }
         },
         created() {
@@ -185,7 +186,22 @@
                              this.$refs.detailNav.currentIndex = this.currentIndex;
                          } */
                 }
+
+                this.listenShowBackTop(position);
             },
+            addToCard() {
+                // 1、获取购物车需要展示的信息
+                const product = {};
+                product.image = this.topImages[0];
+                product.title = this.goods.title;
+                product.desc = this.goods.desc;
+                product.price = this.goods.realPrice;
+                product.iid = this.iid;
+
+                // 2、将商品添加到购物车里
+                // this.$store.commit('addCart', product);
+                this.$store.dispatch('addCart', product);
+            }
         },
         mounted() {
             

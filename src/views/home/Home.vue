@@ -167,7 +167,7 @@
                     this.isShowBackTop = false;
                 }
 
-                // 决定tabControl是否吸顶（position: fixed）
+                // 2、决定tabControl是否吸顶（position: fixed）
                 this.isTabFixed = (-position.y) > this.tabOffsetTop ? true : false;
 
             },
