@@ -14,7 +14,8 @@ export default {
         } */
 
         // 1、查找之前的数组中是否有该商品
-        let oldPorduct = context.state.cartList.find((item) => {
+        let oldPorduct = context.state.cartList.find(item => {
+            console.log(item);
             return item.iid === payload.iid;
         });
 
@@ -25,7 +26,7 @@ export default {
         } else {
             payload.count = 1;
             // context.state.cartList.push(payload);
-            context.commit(ADD_TO_CART, oldPorduct);
+            context.commit(ADD_TO_CART, payload);
         }
     }
 }
