@@ -133,4 +133,28 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         s: seconds 秒钟
 
 # mixin 混入
-    
+
+# 标题和内容的联动效果
+一、点击标题，滚动到对应的主题
+    在detail中监听标题的点击，获取index
+    滚动到对应的主题：
+        1、获取所有主题的offsetTop
+        2、问题：在哪里才能获取到正确的offsetTop
+        （1）created肯定不行，压根不能获取元素
+        （2）mounted也不行，数据还没有获取到
+        （3）获取到数据的回调中也不行，DOM还没有渲染完
+        （4）$.nextTick也不行，因为图片的高度没有被计算在内
+        （5）在图片加载完成后，获取的高度才是正确
+
+二、内容滚动，显示正确的标题
+    (this.currentIndex != i) && ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1]) || (i === length - 1 && positionY >= this.themeTopYs[i]))
+    条件成立：this.currentIndex = i
+    条件一：防止赋值的过程过于频繁
+    条件二：((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1]) || (i === length - 1 && positionY >= this.themeTopYs[i]))
+        条件1：(i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
+        * 判断区间：在0和某个数字之间
+        条件2：(i === length - 1 && positionY >= this.themeTopYs[i])
+        判断大于等于：i === length - 1
+    hack做法：
+        this.currentIndex !== i && (positionY > this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
+    空间换时间
