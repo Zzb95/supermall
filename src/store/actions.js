@@ -15,7 +15,6 @@ export default {
 
         // 1、查找之前的数组中是否有该商品
         let oldPorduct = context.state.cartList.find(item => {
-            console.log(item);
             return item.iid === payload.iid;
         });
 
