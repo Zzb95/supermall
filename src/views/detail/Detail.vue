@@ -18,6 +18,7 @@
         </scroll>
         <detail-bottom-bar @addCard="addToCard" />
         <back-top @click.native="backClick" v-show="isShowBackTop" />
+        <!-- <toast :message="message" :show="showToast" /> -->
     </div>
 </template>
 
@@ -38,6 +39,10 @@
     import { debounce } from 'common/utils'
     import {itemListenerMixin, backTopMixin} from 'common/mixin'
 
+    import { mapActions } from 'vuex'
+
+    /* import Toast from 'components/common/toast/Toast' */
+
     export default {
         name: 'Detail',
         components: {
@@ -51,6 +56,7 @@
             DetailCommentInfo,
             GoodsList,
             DetailBottomBar,
+            //Toast
         },
         mixins: [itemListenerMixin, backTopMixin],
         data() {
@@ -66,6 +72,8 @@
                 themeTopYs: [],
                 getThemeTopY: null,
                 currentIndex: 0,
+                /* message: '',
+                showToast: false */
             }
         },
         created() {
@@ -91,6 +99,7 @@
             }, 100)
         },
         methods: {
+            ...mapActions(['addCart']),
             getDetailFn() {
                 getDetail(this.iid).then(res => {
                     // 解析数据
@@ -198,9 +207,23 @@
                 product.price = this.goods.realPrice;
                 product.iid = this.iid;
 
-                // 2、将商品添加到购物车里
+                // 2、将商品添加到购物车里(1、Promise 2、mapActions)
                 // this.$store.commit('addCart', product);
-                this.$store.dispatch('addCart', product);
+                
+                // this.$store.dispatch('addCart', product);
+                /* this.$store.dispatch('addCart', product).then(res => {
+                    console.log(res);
+                }); */
+
+                this.addCart(product).then(res => {
+                    /* this.message = res;
+                    this.showToast = true;
+                    setTimeout(() => {
+                        this.showToast = false;
+                    }, 2000); */
+
+                    this.$toast.show(res, 2000);
+                });
             }
         },
         mounted() {

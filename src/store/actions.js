@@ -14,7 +14,7 @@ export default {
         } */
 
         // 1、查找之前的数组中是否有该商品
-        let oldPorduct = context.state.cartList.find(item => {
+        /* let oldPorduct = context.state.cartList.find(item => {
             return item.iid === payload.iid;
         });
 
@@ -26,6 +26,24 @@ export default {
             payload.count = 1;
             // context.state.cartList.push(payload);
             context.commit(ADD_TO_CART, payload);
-        }
+        } */
+
+        return new Promise((resolve, reject) => {
+            let oldPorduct = context.state.cartList.find(item => {
+                return item.iid === payload.iid;
+            });
+    
+            // 判断oldPorduct是否存在
+            if (oldPorduct) {
+                // oldPorduct.count += 1;
+                context.commit(ADD_COUNTER, oldPorduct);
+                resolve('当前的商品数量+1');
+            } else {
+                payload.count = 1;
+                // context.state.cartList.push(payload);
+                context.commit(ADD_TO_CART, payload);
+                resolve('添加了新的商品');
+            }
+        }) 
     }
 }

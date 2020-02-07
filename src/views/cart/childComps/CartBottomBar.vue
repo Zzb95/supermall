@@ -1,13 +1,16 @@
 <template>
     <div class="bottom-bar">
         <div class="check-content">
-            <check-button class="check-button" />
+            <check-button 
+                :is-checked="isSelectAll" 
+                class="check-button" 
+                @click.native="checkClick"/>
             <span>全选</span>
         </div>
         <div class="price">
             合计：{{totalPrice}}
         </div>
-        <div class="calculate">
+        <div class="calculate" @click="calcClick">
             去计算({{checkLength}})
         </div>
     </div>
@@ -44,6 +47,45 @@
                 return this.cartList.filter(item => {
                     return item.checked;
                 }).length;
+            },
+            isSelectAll() {
+                if (this.cartList.length === 0) {
+                    return false;
+                }
+
+                // 先找没有被选中的元素，如果有的话就取反，表示没有全选
+                // 1、使用filter
+                // return !this.cartList.filter(item => !item.checked).length;
+
+                // 2、使用find
+                // return !this.cartList.find(item => !item.checked);
+
+                // 3、普通遍历
+                for (let item of this.cartList) {
+                    if (!item.checked) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        },
+        methods: {
+            checkClick() {
+                // 全部选中的时候
+                /* if (this.isSelectAll) {
+                    this.cartList.forEach(item => item.checked = false);
+                } else {
+                    // 部分或全部不选中
+                    this.cartList.forEach(item => item.checked = true);
+                } */
+
+                this.cartList.forEach(item => item.checked = !this.isSelectAll);
+            },
+            calcClick() {
+                if (!this.isSelectAll) {
+                    
+                }
             }
         }
     }

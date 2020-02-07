@@ -167,3 +167,50 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 # 使用vuex
     数组常用的方法有哪些？
     push/pop/unshift/shift/sort/reverse/map/filter/reduce/join
+
+# 点击加入购物车
+    一、监听加入购物车按钮的点击，并且获取商品信息
+        1、监听
+        2、获取商品信息：iid/price/image/title/desc
+    二、将商品添加到Vuex中
+        1、安装Vuex
+        2、配置Vuex
+        3、定义mutations，将商品添加到state.cartList
+        4、重构代码
+            （1）将mutations中的代码抽取到actions中(定义两个mutations)
+            （2）将mutations/actions单独抽取到文件中
+
+# 购物车的展示
+    一、购物车的导航栏的展示
+
+    二、购物车商品的展示
+        1、CartList -> Scroll(滚动问题)
+        2、CartListItem -> CheckButton
+    三、商品的选中和不选中切换
+        1、修改模型对象，改变选中和不选中
+    四、底部工具栏的汇总
+        1、全选按钮
+        2、计算总价格
+        3、去计算
+
+# 购物车的全选按钮
+    一、显示的状态
+        1、判断是否有一个不选中，全选就是不选中
+    二、点击全选按钮
+        1、如果原来都是选中，点击一次，全部不选中
+        2、如果原来都是不选中（某些不选中），全部选中
+
+# 添加购物车弹窗
+    一、Vuex的补充
+        1、Actions可以返回一个Promise
+        2、mapActions的映射关系
+    二、Toast（吐司）封装
+        1、普通封装方式
+        2、插件封装方式
+
+# 补充一些细节
+    一、fastClick——解决移动端300ms延迟
+        1、通过npm install fastclick --save 进行安装
+        
+
+
