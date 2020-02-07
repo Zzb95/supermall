@@ -35,7 +35,7 @@
 </script>
 <style scoped>
     .cart-list {
-        height: calc(100% - 49px - 44px);
+        height: calc(100% - 49px - 44px - 40px);
     }
     .content {
         height: 100%;

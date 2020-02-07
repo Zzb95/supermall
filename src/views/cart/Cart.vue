@@ -8,12 +8,13 @@
         <cart-list />
 
         <!-- 底部的汇总 -->
-
+        <cart-bottom-bar />
     </div>
 </template>
 
 <script>
     import CartList from './childComps/CartList'
+    import CartBottomBar from './childComps/CartBottomBar'
 
     import NavBar from 'components/common/navbar/NavBar'
 
@@ -28,6 +29,7 @@
         },
         components: {
             CartList,
+            CartBottomBar,
 
             NavBar
         },
