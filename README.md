@@ -210,7 +210,24 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # 补充一些细节
     一、fastClick——解决移动端300ms延迟
-        1、通过npm install fastclick --save 进行安装
-        
+        1、安装
+            通过npm install fastclick --save 进行安装
+        2、导入
+            在main.js中导入
+            import FastClick from 'fastclick'
+        3、调用attach函数
+            FastClick.attach(document.body);
 
+    二、图片的懒加载
+        1、什么是图片懒加载？
+        图片需要显示在屏幕上
+        2、使用vue-lazyload：
+        （1）安装
+            npm install vue-lazyload --save
+        （2）导入
+            import VueLazyLoad from 'vue-lazyload'
+        （3）Vue.use
+            Vue.use(VueLazyLoad);
+        （4）修改img :src -> v-lazy
+# npm install postcss-px-to-viewport --save-dev
 
